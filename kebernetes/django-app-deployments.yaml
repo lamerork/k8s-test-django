@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-app-deployment
+  labels:
+    app: django-app
+spec:
+  selector:
+    matchLabels:
+      app: django-app
+  template:
+    metadata:
+      labels:
+        app: django-app
+    spec:
+      containers:
+      - name: django-app
+        image: django_app
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        envFrom:
+          - configMapRef:
+              name: django-app-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+  labels:
+    env: prod
+spec:
+  selector:
+    app: django-app
+  type: NodePort
+  ports:
+    - name: web-http
+      protocol: TCP
+      port: 80
+      nodePort: 30080
+  
