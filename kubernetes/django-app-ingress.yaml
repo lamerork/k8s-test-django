@@ -49,7 +49,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: localhost
+  - host: localhost.local
     http:
       paths:
       - path: /
