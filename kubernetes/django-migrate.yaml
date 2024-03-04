@@ -3,8 +3,9 @@ kind: Job
 metadata:
   name: django-migrate
   labels:
-    app.kubernetes.io/name: django-migrate
+    app: django-migrate
 spec:
+  ttlSecondsAfterFinished: 90
   template:
     spec:
       containers:

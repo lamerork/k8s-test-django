@@ -2,6 +2,8 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: django-clearsessions
+  labels:
+    app: django-clearsessions
 spec:
   schedule: "0 0 * * *"
   startingDeadlineSeconds: 60

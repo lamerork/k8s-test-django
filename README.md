@@ -80,15 +80,37 @@ $ docker compose build web
 [Kubectl](https://kubernetes.io/ru/docs/tasks/tools/install-kubectl/) и [minikube](https://minikube.sigs.k8s.io/docs/) должны быть установлены и настроены.
 
 
-Создавем файл конфигурации
+Создавем файл конфигурации `configmap.yaml`:
 
+```yaml
+data:
+  SECRET_KEY: <секретный ключ Django>
+  DEBUG: <"False" или "True"> 
+  ALLOWED_HOSTS: star-burger.test
+  DATABASE_URL: <адрес для подключения к базе данных PostgreSQL. 
+```
 
 Загружаем configmap командой
 ```sh
-kubectl apply -f configmap.yaml
+kubectl apply -f kubernetes/configmap.yaml
 ```
 
-Запустить проект командой
+Включите Ingress:
 ```sh
-kubectl apply -f django-app-deployments.yaml
+minikube addons enable ingress
+```
+
+После этого необходимо применить настройки Ingress:
+```sh
+kubectl apply -f kubernetes/django-app-ingress.yaml
+```
+
+Примените миграции Django к базе данных:
+```sh
+kubectl apply -f kubernetes/django-migrate.yaml
+```
+
+Создайте запланированную задачу, удаления сессий Django:
+```sh
+kubectl apply -f kubernetes/django-clearsessions.yaml
 ```
