@@ -95,6 +95,11 @@ data:
 kubectl apply -f kubernetes/configmap.yaml
 ```
 
+Запустите deployment командой
+```sh
+kubectl apply -f kubernetes/django-app-deployments.yaml
+```
+
 Включите Ingress:
 ```sh
 minikube addons enable ingress
