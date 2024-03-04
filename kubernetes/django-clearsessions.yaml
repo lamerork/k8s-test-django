@@ -4,6 +4,8 @@ metadata:
   name: django-clearsessions
 spec:
   schedule: "0 0 * * *"
+  startingDeadlineSeconds: 60
+  ttlSecondsAfterFinished: 30
   jobTemplate:
     spec:
       template:
@@ -17,6 +19,6 @@ spec:
               - manage.py
               - clearsessions
             envFrom:
-            - configMapRef:
-              name: django-app-config
+              - configMapRef:
+                name: django-app-config
           restartPolicy: OnFailure
