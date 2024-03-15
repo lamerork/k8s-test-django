@@ -92,12 +92,12 @@ data:
 
 Загружаем configmap командой
 ```sh
-kubectl apply -f kubernetes/configmap.yaml
+kubectl apply -f deploy/local-minikube-virtualbox/django-app-configmap.yaml
 ```
 
 Запустите deployment командой
 ```sh
-kubectl apply -f kubernetes/django-app-deployments.yaml
+kubectl apply -f deploy/local-minikube-virtualbox/django-app-deployments.yaml
 ```
 
 Включите Ingress:
@@ -107,15 +107,15 @@ minikube addons enable ingress
 
 После этого необходимо применить настройки Ingress:
 ```sh
-kubectl apply -f kubernetes/django-app-ingress.yaml
+kubectl apply -f deploy/local-minikube-virtualbox/django-app-ingress.yaml
 ```
 
 Примените миграции Django к базе данных:
 ```sh
-kubectl apply -f kubernetes/django-migrate.yaml
+kubectl apply -f deploy/local-minikube-virtualbox/django-migrate.yaml
 ```
 
 Создайте запланированную задачу, удаления сессий Django:
 ```sh
-kubectl apply -f kubernetes/django-clearsessions.yaml
+kubectl apply -f deploy/local-minikube-virtualbox/django-clearsessions.yaml
 ```
