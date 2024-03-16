@@ -7,3 +7,5 @@ metadata:
     app: django-app
 data:
   DEBUG: 'True'
+  ALLOWED_HOSTS: 'edu-admiring-carson.sirius-k8s.dvmn.org'
+  
