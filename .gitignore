@@ -166,3 +166,4 @@ backend_main_django/.DS_Store
 .DS_Store
 kebernetes/configmap.yaml
 deploy/yc-sirius/edu-admiring-carson/RootCA.pem
+deploy/yc-sirius/edu-admiring-carson/django-secret.yaml

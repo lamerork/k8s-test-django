@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: django-app-config
+  namespace: edu-admiring-carson
+  labels:
+    app: django-app
+data:
+  DEBUG: 'True'

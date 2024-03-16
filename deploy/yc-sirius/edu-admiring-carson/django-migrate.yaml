@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: django-migrate
+  namespace: edu-admiring-carson
+  labels:
+    app: django-migrate
+spec:
+  ttlSecondsAfterFinished: 90
+  template:
+    spec:
+      containers:
+        - name: django-migrate
+          image: lamerork/django_app_k8s:latest
+          imagePullPolicy: Never
+          command: ["python", "./manage.py", "migrate", "--no-input"]
+          envFrom:
+            - configMapRef:
+                name: django-app-config
+            - secretRef:
+              name: django-secret
+          env:
+          - name: DATABASE_URL
+            valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: url
+          volumeMounts:
+            - name: ssl-cert
+              mountPath: "/.postgresql/root.crt"
+              readOnly: true
+      volumes:
+      - name: ssl-cert
+        secret:
+          secretName: psql-cert
+          defaultMode: 0600
+      restartPolicy: OnFailure
