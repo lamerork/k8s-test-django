@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: django-clearsessions
+  namespace: edu-admiring-carson
+  labels:
+    app: django-clearsessions
+spec:
+  schedule: "0 0 * * *"
+  startingDeadlineSeconds: 60
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: django-clearsessions
+            image: lamerork/django_app_k8s:latest
+            imagePullPolicy: IfNotPresent
+            command:
+              - python
+              - manage.py
+              - clearsessions
+            envFrom:
+              - configMapRef:
+                  name: django-app-config
+              - secretRef:
+                  name: django-secret
+            env:
+              - name: DATABASE_URL
+                valueFrom:
+                    secretKeyRef:
+                      name: postgres
+                      key: url
+            volumeMounts:
+            - name: ssl-cert
+              mountPath: "/.postgresql/root.crt"
+              readOnly: true
+          volumes:
+          - name: ssl-cert
+            secret:
+              secretName: psql-cert
+              defaultMode: 0600
+          restartPolicy: OnFailure
