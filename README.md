@@ -119,3 +119,64 @@ kubectl apply -f deploy/local-minikube-virtualbox/django-migrate.yaml
 ```sh
 kubectl apply -f deploy/local-minikube-virtualbox/django-clearsessions.yaml
 ```
+
+## Как запустить в yandex-sirius облаке
+
+### Создание Docker образа
+Вы можете использовать готовый Docker образ, который залит на DockerHub. Так же есть возможность создать свой собственный.
+Создайте репозиторий на [DockerHub](https://hub.docker.com/)
+Для этого перейдите в папку `backend_main_django` и соберите образ
+```sh
+docker build  -t yournaname/appname:tagname . 
+```
+Сделайте `push`
+```sh
+docker login
+docker push yournaname/appname:tagname
+```
+
+## Запуск в yandex-sirius облаке
+
+Задайте `context` и `namespace`
+```sh
+kubectl config use-context yc-sirius
+kubectl config set-context --current --namespace=edu-goofy-allen
+```
+
+Cкачайте сертификат 
+```sh
+wget "https://storage.yandexcloud.net/cloud-certs/CA.pem"
+```
+Создайте секрет
+```sh
+kubectl create secret generic psql-cert --from-file=root.crt
+```
+
+Перейдите в папку `yc-sisrius/edu-admiring-carson` и примените конфигурационные файлы
+```sh
+kubectl apply -f django-app-config.yaml
+kubectl apply -f django-secret.yaml
+kubectl apply -f django-app-deployments.yaml
+kubectl apply -f django-app-ingress.yaml 
+```
+
+Примените миграции Django к базе данных:
+```sh
+kubectl apply -f django-migrate.yaml 
+```
+
+Создайте запланированную задачу, удаления сессий Django:
+```sh
+kubectl apply -f django-clearsessions.yaml
+```
+
+Создание  superuser
+При первом запуске так же необходимо создать superuser
+Перейдите в нужный контейнер `django-app`
+```sh
+kubectl exec -it app-deployment  -c django-app -- /bin/sh
+```
+создайте superuser
+```sh
+python manage.py createsuperuser
+```
