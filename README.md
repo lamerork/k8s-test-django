@@ -126,16 +126,18 @@ kubectl apply -f deploy/local-minikube-virtualbox/django-clearsessions.yaml
 Вы можете использовать готовый Docker образ, который залит на DockerHub. Так же есть возможность создать свой собственный.
 Создайте репозиторий на [DockerHub](https://hub.docker.com/)
 Для этого перейдите в папку `backend_main_django` и соберите образ
+
 ```sh
 docker build  -t yournaname/appname:tagname . 
 ```
+
 Сделайте `push`
 ```sh
 docker login
 docker push yournaname/appname:tagname
 ```
 
-## Запуск в yandex-sirius облаке
+### Запуск в yandex-sirius облаке
 
 Задайте `context` и `namespace`
 ```sh
@@ -147,6 +149,7 @@ Cкачайте сертификат
 ```sh
 wget "https://storage.yandexcloud.net/cloud-certs/CA.pem"
 ```
+
 Создайте секрет
 ```sh
 kubectl create secret generic psql-cert --from-file=root.crt
@@ -173,10 +176,14 @@ kubectl apply -f django-clearsessions.yaml
 Создание  superuser
 При первом запуске так же необходимо создать superuser
 Перейдите в нужный контейнер `django-app`
+
 ```sh
-kubectl exec -it app-deployment  -c django-app -- /bin/sh
+kubectl exec -it django-app-deployment  -c django-app -- /bin/sh
 ```
+
 создайте superuser
 ```sh
 python manage.py createsuperuser
 ```
+
+[Пример сайта](https://edu-admiring-carson.sirius-k8s.dvmn.org/admin/login/?next=/admin/)
